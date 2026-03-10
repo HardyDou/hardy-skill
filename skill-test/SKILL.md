@@ -55,21 +55,31 @@ For each selected skill:
 **Step 1: Setup**
 - Creates directory: `[category]/[skill-name]/`
 - Generates realistic test input: `input.md`
+- Records start time and initial usage
 
 **Step 2: Execution**
 - Invokes the skill using the Skill tool
 - Captures output and execution time
 - Handles errors gracefully
+- Tracks token usage during execution
 
-**Step 3: Evaluation**
+**Step 3: Cost Analysis**
+- Runs `/usage` to get token consumption
+- Runs `/cost` to calculate API costs
+- Exports conversation with `/export` to `process.md`
+- Records performance metrics
+
+**Step 4: Evaluation**
 - Saves output to `output.*`
 - Generates `REPORT.md` with:
-  - 4-dimension scoring (1-5 scale)
+  - 5-dimension scoring (1-5 scale): quality, speed, instruction following, practicality, **cost-efficiency**
+  - Token usage and cost breakdown
+  - Execution time analysis
   - Highlights and weaknesses
   - Conclusion and recommendations
 
-**Step 4: Summary**
-- Outputs brief test summary
+**Step 5: Summary**
+- Outputs brief test summary with cost metrics
 - Continues to next skill
 
 ### 3. Report Generation
@@ -83,7 +93,7 @@ After all tests complete, generates `SUMMARY.md` with:
 
 ## Scoring Dimensions
 
-Each skill is scored 1-5 on four dimensions:
+Each skill is scored 1-5 on five dimensions:
 
 | Dimension | What It Measures |
 |---|---|
@@ -91,8 +101,17 @@ Each skill is scored 1-5 on four dimensions:
 | **Response Speed** | Execution time and performance |
 | **Instruction Following** | How well it adheres to its documented behavior |
 | **Practicality** | Real-world usefulness and value |
+| **Cost Efficiency** | Token usage and API cost relative to value delivered |
 
-**Total Score**: 20 points maximum
+**Total Score**: 25 points maximum
+
+### Cost Efficiency Scoring Guide
+
+- **5 points**: Minimal tokens, excellent value (< 5k tokens for simple tasks)
+- **4 points**: Reasonable usage (5k-15k tokens)
+- **3 points**: Moderate usage (15k-30k tokens)
+- **2 points**: High usage (30k-50k tokens)
+- **1 point**: Excessive usage (> 50k tokens)
 
 ## Output Structure
 
@@ -101,12 +120,14 @@ Each skill is scored 1-5 on four dimensions:
 ├── [skill-name-1]/
 │   ├── input.md      ← Generated test prompt
 │   ├── output.*      ← Skill output
-│   └── REPORT.md     ← Individual evaluation
+│   ├── process.md    ← Exported conversation (via /export)
+│   └── REPORT.md     ← Individual evaluation with cost analysis
 ├── [skill-name-2]/
 │   ├── input.md
 │   ├── output.*
+│   ├── process.md
 │   └── REPORT.md
-└── SUMMARY.md        ← Comparative analysis
+└── SUMMARY.md        ← Comparative analysis with cost comparison
 ```
 
 ## Example Usage
