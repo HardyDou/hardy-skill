@@ -1,40 +1,40 @@
 ---
 name: skill-test
-description: Automated testing and evaluation framework for Claude Code skills. Discovers skills, generates test cases, executes tests, and produces standardized quality reports with scoring across multiple dimensions.
+description: Claude Code skills 自动化测试与评估框架。发现 skills、生成测试用例、执行测试，并生成多维度评分的标准化质量报告。
 ---
 
-# skill-test: Claude Code Skill Testing Framework
+# skill-test: Claude Code Skill 测试框架
 
-Automated testing and quality evaluation for Claude Code skills. Helps you discover, test, compare, and select the best skills for your needs.
+Claude Code skills 的自动化测试与质量评估工具。帮助你发现、测试、对比并选择最适合需求的 skills。
 
-## When to Use This Skill
+## 何时使用此 Skill
 
-Use this skill when you want to:
+当你想要：
 
-- **Discover skills**: Search for skills related to a specific topic or task
-- **Evaluate quality**: Test a skill's output quality, speed, and reliability
-- **Compare options**: Benchmark multiple skills side-by-side
-- **Make decisions**: Get data-driven recommendations on which skill to use
+- **发现 skills**：搜索与特定主题或任务相关的 skills
+- **评估质量**：测试 skill 的输出质量、速度和可靠性
+- **对比选项**：并排对比多个 skills
+- **做出决策**：获得数据驱动的 skill 使用建议
 
-## Trigger Phrases
+## 触发短语
 
-- `测试 [topic] 相关skill` - Search and test skills related to a topic
-- `测试 [skill-name]` - Test a specific skill directly
-- `test [topic] skills` - English version of topic search
-- `test [skill-name]` - English version of direct test
+- `测试 [主题] 相关skill` - 搜索并测试与主题相关的 skills
+- `测试 [skill名称]` - 直接测试特定 skill
+- `test [topic] skills` - 英文版主题搜索
+- `test [skill-name]` - 英文版直接测试
 
-## How It Works
+## 工作原理
 
-### 1. Skill Discovery
+### 1. Skill 发现
 
-When you say "测试 写文章 相关skill":
+当你说"测试 写文章 相关skill"时：
 
-1. **Local search**: Scans installed skills from system context
-2. **Remote search**: Queries skills.sh via `find-skills`
-3. **Merge & rank**: Combines results, removes duplicates, ranks by install count
-4. **Present options**: Shows a table with skill names, sources, install counts, and descriptions
+1. **本地搜索**：从系统上下文扫描已安装的 skills
+2. **远程搜索**：通过 `find-skills` 查询 skills.sh
+3. **合并排序**：合并结果、去重、按安装量排序
+4. **展示选项**：显示包含 skill 名称、来源、安装量和描述的表格
 
-Example output:
+示例输出：
 
 ```
 找到以下与「写文章」相关的 skill：
@@ -48,201 +48,367 @@ Example output:
 请确认要测试哪些？（可多选，输入编号，如：1 2 3）
 ```
 
-### 2. Test Execution
+### 2. 测试执行
 
-For each selected skill:
+对每个选中的 skill：
 
-**Step 1: Setup**
-- Creates directory: `[category]/[skill-name]/`
-- Generates realistic test input: `input.md`
-- Records start time and initial usage
+**步骤 1：准备**
+- 创建目录：`[类别]/[skill名称]/`
+- 生成真实测试输入：`[类别]/input.md`
+- 记录开始时间和初始使用量
 
-**Step 2: Execution**
-- Invokes the skill using the Skill tool
-- Captures output and execution time
-- Handles errors gracefully
-- Tracks token usage during execution
+**步骤 2：执行**
+- 使用 Skill 工具调用 skill
+- **监控交互式问题**（AskUserQuestion 调用）
+- **如检测到问题**：召集相应的领域专家代理
+- **专家提供答案**：自动继续测试流程
+- 捕获输出和执行时间
+- 优雅处理错误
+- 追踪执行期间的 token 使用量
 
-**Step 3: Cost Analysis**
-- Runs `/usage` to get token consumption
-- Runs `/cost` to calculate API costs
-- Exports conversation with `/export` to `process.md`
-- Records performance metrics
+**步骤 3：成本分析**
+- 检测当前代理类型（Claude Code、Cursor 等）
+- 运行相应的使用量命令：
+  - Claude Code：`/usage` 和 `/cost`
+  - Cursor：检查代理特定命令
+  - 其他代理：根据可用命令适配
+- 使用代理特定的导出命令导出对话
+- 记录性能指标
 
-**Step 4: Evaluation**
-- Saves output to `output.*`
-- Generates `REPORT.md` with:
-  - 5-dimension scoring (1-5 scale): quality, speed, instruction following, practicality, **cost-efficiency**
-  - Token usage and cost breakdown
-  - Execution time analysis
-  - Highlights and weaknesses
-  - Conclusion and recommendations
+**步骤 4：导出**
+- 运行 `/export skill名称` 到 `[类别]/[skill名称]/`
 
-**Step 5: Summary**
-- Outputs brief test summary with cost metrics
-- Continues to next skill
 
-### 3. Report Generation
+**步骤 5：会话重置**
+- 运行 `/clear` 或等效命令重置对话状态
+- 确保下一个 skill 测试从干净状态开始
+- 防止测试间的成本累积
 
-After all tests complete, generates `SUMMARY.md` with:
+**步骤 6：总结**
+- 输出包含成本指标的简要测试摘要
+- 继续下一个 skill（会话重置后）
 
-- **Comparison table**: All skills scored side-by-side
-- **Key findings**: Major insights from testing
-- **Recommendations**: Which skill to use for which scenario
-- **Detailed analysis**: Strengths, weaknesses, and trade-offs
+### 3. 报告生成
 
-## Scoring Dimensions
+所有测试完成后，生成 `SUMMARY.md`，包含：
 
-Each skill is scored 1-5 on five dimensions:
+- **对比表格**：所有 skills 并排评分
+- **关键发现**：测试中的主要洞察
+- **推荐建议**：针对不同场景使用哪个 skill
+- **详细分析**：优势、劣势和权衡
 
-| Dimension | What It Measures |
+## 评分维度
+
+每个 skill 在五个维度上评分，每个维度 1-5 分：
+
+| 维度 | 评估内容 |
 |---|---|
-| **Output Quality** | Accuracy, completeness, and polish of results |
-| **Response Speed** | Execution time and performance |
-| **Instruction Following** | How well it adheres to its documented behavior |
-| **Practicality** | Real-world usefulness and value |
-| **Cost Efficiency** | Token usage and API cost relative to value delivered |
+| **输出质量** | 结果的准确性、完整性和精致度 |
+| **响应速度** | 执行时间和性能（如有交互则包含专家咨询时间） |
+| **指令遵循** | 遵循其文档行为的程度 |
+| **实用性** | 真实世界的有用性和价值 |
+| **成本效率** | 相对于交付价值的 token 使用量和 API 成本（包含专家代理成本） |
 
-**Total Score**: 25 points maximum
+**总分**：最高 25 分
 
-### Cost Efficiency Scoring Guide
+### 成本效率评分指南
 
-- **5 points**: Minimal tokens, excellent value (< 5k tokens for simple tasks)
-- **4 points**: Reasonable usage (5k-15k tokens)
-- **3 points**: Moderate usage (15k-30k tokens)
-- **2 points**: High usage (30k-50k tokens)
-- **1 point**: Excessive usage (> 50k tokens)
+- **5 分**：极少 token，卓越价值（简单任务 < 5k tokens）
+- **4 分**：合理使用（5k-15k tokens）
+- **3 分**：中等使用（15k-30k tokens）
+- **2 分**：较高使用（30k-50k tokens）
+- **1 分**：过度使用（> 50k tokens）
 
-## Output Structure
+## 领域专家规格说明
+
+当被测 skill 需要交互输入时，skill-test 会召集专业领域专家代理提供答案。每个专家都有特定的知识和决策标准：
+
+### 内容策略专家
+**领域**：写作、内容创作、人性化、转换
+**专长**：
+- 语气选择（专业、随意、技术、友好）
+- 受众定位（B2B、B2C、技术、通用）
+- 内容格式偏好（博客、社交媒体、文档）
+- 风格指南和品牌声音
+
+**决策标准**：选择能够：
+- 最好地展示 skill 的高质量输出
+- 符合常见专业用例
+- 展现多样性和精致度
+
+### 产品管理专家
+**领域**：PRD 编写、需求收集、功能规格
+**专长**：
+- 产品策略和路线图规划
+- 用户故事和验收标准定义
+- 利益相关者沟通和优先级排序
+- 技术可行性评估
+
+**决策标准**：选择能够：
+- 反映真实世界产品场景
+- 平衡用户需求与技术约束
+- 展现全面思考
+
+### UX/UI 设计专家
+**领域**：界面设计、用户体验、视觉设计
+**专长**：
+- 设计系统原则和模式
+- 可访问性和可用性标准
+- 视觉层次和构图
+- 响应式设计和跨平台考虑
+
+**决策标准**：选择能够：
+- 遵循既定设计最佳实践
+- 创建直观且可访问的体验
+- 展现现代设计思维
+
+### 软件架构专家
+**领域**：系统设计、架构模式、技术决策
+**专长**：
+- 架构模式（微服务、单体、无服务器）
+- 可扩展性和性能优化
+- 技术栈选择
+- 安全性和可靠性模式
+
+**决策标准**：选择能够：
+- 反映生产级思维
+- 平衡复杂性与可维护性
+- 考虑长期可扩展性
+
+### 通用领域专家
+**领域**：跨职能问题、通用业务决策
+**专长**：
+- 业务策略和运营
+- 项目管理和规划
+- 风险评估和缓解
+- 利益相关者沟通
+
+**决策标准**：选择能够：
+- 符合实际业务逻辑
+- 最小化风险同时最大化价值
+- 符合行业最佳实践
+
+**专家代理提示词模板：**
+
+召集专家时，使用此结构：
+```
+你是一位【领域】专家，正在协助自动化 skill 测试。
+
+上下文：
+- 被测 skill：【skill 名称】
+- 测试场景：【简要描述】
+- 提出的问题：【实际问题】
+
+你的任务：
+1. 在测试上下文中分析问题
+2. 选择最能展示 skill 能力的选项
+3. 为你的选择提供简要理由
+4. 按 skill 期望的格式回复（选项编号、文本等）
+
+做出真实、专业的决策，展现 skill 的价值。
+```
+
+## 输出结构
 
 ```
-[category]/
-├── [skill-name-1]/
-│   ├── input.md      ← Generated test prompt
-│   ├── output.*      ← Skill output
-│   ├── process.md    ← Exported conversation (via /export)
-│   └── REPORT.md     ← Individual evaluation with cost analysis
-├── [skill-name-2]/
-│   ├── input.md
+[类别]/
+├── input.md      ← 生成的测试提示词
+├── [skill名称-1]/
+│   ├── output.*      ← Skill 输出
+│   ├── process.txt    ← 导出的对话（通过 /export）- 包含所有问答
+│   └── REPORT.md      ← 评估报告
+├── [skill名称-2]/
 │   ├── output.*
-│   ├── process.md
+│   ├── process.txt
 │   └── REPORT.md
-└── SUMMARY.md        ← Comparative analysis with cost comparison
+└── SUMMARY.md        ← 包含成本对比的综合分析
 ```
 
-## Example Usage
+**注意**：通过 `/export` 导出的 process.txt 文件包含完整的交互历史，包括 skill 提出的任何问题和领域专家提供的答案。无需单独的 interactions.md 文件。
 
-### Example 1: Find the best writing skill
+## 使用示例
 
-**Input:**
+### 示例 1：找到最佳写作 skill
+
+**输入：**
 ```
 测试 写文章 相关skill
 ```
 
-**Process:**
-1. Finds 8 writing-related skills
-2. User selects 3 to test
-3. Tests each with realistic writing tasks
-4. Generates comparative report
+**流程：**
+1. 找到 8 个写作相关的 skills
+2. 用户选择 3 个进行测试
+3. 用真实写作任务测试每个
+4. 生成对比报告
 
-**Output:**
-- `writing/humanizer-zh/` - Score: 19/20
-- `writing/xiaohongshu-converter/` - Score: 16/20
-- `writing/wechat-converter/` - Score: 18/20
-- `writing/SUMMARY.md` - Recommendation: Use humanizer-zh for general use
+**输出：**
+- `写作/humanizer-zh/` - 得分：19/20
+- `写作/xiaohongshu-converter/` - 得分：16/20
+- `写作/wechat-converter/` - 得分：18/20
+- `写作/SUMMARY.md` - 推荐：通用场景使用 humanizer-zh
 
-### Example 2: Verify a specific skill
+### 示例 2：验证特定 skill
 
-**Input:**
+**输入：**
 ```
 测试 humanizer-zh
 ```
 
-**Process:**
-1. Skips discovery phase
-2. Generates test case for AI text humanization
-3. Executes skill and captures output
-4. Produces detailed evaluation report
+**流程：**
+1. 跳过发现阶段
+2. 为 AI 文本人性化生成测试用例
+3. 执行 skill 并捕获输出
+4. 生成详细评估报告
 
-**Output:**
-- `writing/humanizer-zh/REPORT.md` with full analysis
+**输出：**
+- `写作/humanizer-zh/REPORT.md` 包含完整分析
 
-## Automation Rules
+## 自动化规则
 
-- ✅ Directories created automatically
-- ✅ Test inputs generated based on skill purpose
-- ✅ Outputs saved to files (not shown in chat)
-- ✅ Progress updates after each test
-- ✅ Summary generated when all tests complete
+- ✅ 自动创建目录
+- ✅ 根据 skill 用途生成测试输入
+- ✅ **领域专家自动回答交互式问题**
+- ✅ 输出保存到文件（不在聊天中显示）
+- ✅ 每次测试后更新进度
+- ✅ 所有测试完成后生成总结
 
-## Handling Special Cases
+## 处理特殊情况
 
-### Non-invocable Skills
+### 被测 Skill 的交互式问题
 
-Some skills have `user-invocable: false` and cannot be called directly.
+当被测试的 skill 提出交互式问题（通过 AskUserQuestion）时，skill-test 必须自动处理，无需人工干预：
 
-**Behavior**: skill-test will:
-1. Read the skill's documentation
-2. Manually apply its instructions
-3. Note the limitation in the report
-4. Score "Response Speed" lower due to manual process
+**自动专家咨询流程：**
 
-### Failed Tests
+1. **检测问题上下文**：当 skill 提问时，分析：
+   - Skill 的领域（写作、产品、设计、架构等）
+   - 具体提出的问题
+   - 测试场景的上下文
 
-If a skill fails or errors:
-1. Error is captured in the report
-2. Scoring reflects the failure
-3. Testing continues with remaining skills
+2. **召集领域专家**：使用 Agent 工具创建专业领域专家代理：
+   - 写作类 skill → 召集内容策略专家
+   - 产品类 skill → 召集产品管理专家
+   - 设计类 skill → 召集 UX/UI 设计专家
+   - 架构类 skill → 召集软件架构专家
+   - 通用问题 → 召集相应领域的专家
 
-### Missing Skills
+3. **专家提供答案**：专家代理应该：
+   - 理解测试上下文和目标
+   - 提供真实、专业的答案
+   - 基于常见用例做出合理假设
+   - 选择最能展示 skill 能力的选项
 
-If a skill needs installation:
-1. Prompts user for confirmation
-2. Runs `npx skills add [package] -g -y`
-3. Proceeds with testing
+4. **继续测试**：使用专家的答案回复 skill 并继续测试流程
 
-## Best Practices
+**示例流程：**
 
-1. **Test multiple skills**: Compare at least 2-3 options for better insights
-2. **Review outputs**: Check the actual output files, not just scores
-3. **Consider context**: A lower-scored skill might be better for your specific use case
-4. **Read summaries**: The SUMMARY.md provides the most valuable insights
+```
+Skill 提问："请选择语气风格：(1) 专业 (2) 随意 (3) 技术"
+↓
+skill-test 召集：内容策略专家代理
+↓
+专家分析："这是写作测试，专业语气最能展示质量"
+↓
+skill-test 回复："1"（专业）
+↓
+测试自动继续
+```
 
-## Limitations
+**实施规则：**
 
-- Each skill tested with only one scenario (may not cover all features)
-- Scoring has subjective elements based on AI judgment
-- Non-invocable skills require manual execution (slower, less automated)
-- Test quality depends on generated input.md relevance
+- ✅ 自动化测试期间绝不等待人工输入
+- ✅ 遇到问题时总是召集相应的专家代理
+- ✅ 专家代理应做出最能展示 skill 能力的决策
+- ✅ 所有问答通过 /export 自动记录在 process.txt 中
+- ✅ 如有必要，在 REPORT.md 中添加"交互处理"章节总结关键问答
 
-## Commands Reference
+### 代理特定命令
 
-| Command | Action |
+不同代理有不同的使用量追踪和导出命令：
+
+| 代理 | 使用量命令 | 成本命令 | 导出命令 | 清除命令 |
+|---|---|---|---|---|
+| Claude Code | `/usage` | `/cost` | `/export` | `/clear` |
+| Cursor | 查看文档 | 查看文档 | 查看文档 | 查看文档 |
+| 其他 | 适配 | 适配 | 适配 | 适配 |
+
+**行为**：skill-test 自动检测代理类型并使用相应命令。
+
+### 测试间的会话重置
+
+**关键**：每个 skill 测试完成后，必须重置会话以防止：
+- 测试间的成本累积
+- Token 计数重叠
+- 性能指标不准确
+
+**方法**：在开始下一个 skill 测试前运行 `/clear`（或等效命令）。
+
+### 不可调用的 Skills
+
+某些 skills 设置了 `user-invocable: false`，无法直接调用。
+
+**行为**：skill-test 将：
+1. 阅读 skill 的文档
+2. 手动应用其指令
+3. 在报告中注明此限制
+4. 由于手动流程，"响应速度"评分较低
+
+### 失败的测试
+
+如果 skill 失败或出错：
+1. 错误被记录在报告中
+2. 评分反映失败情况
+3. 继续测试剩余 skills
+
+### 缺失的 Skills
+
+如果 skill 需要安装：
+1. 提示用户确认
+2. 运行 `npx skills add [package] -g -y`
+3. 继续测试
+
+## 最佳实践
+
+1. **测试多个 skills**：对比至少 2-3 个选项以获得更好的洞察
+2. **审查输出**：检查实际输出文件，而不仅仅是分数
+3. **考虑上下文**：评分较低的 skill 可能更适合你的特定用例
+4. **阅读总结**：SUMMARY.md 提供最有价值的洞察
+
+## 局限性
+
+- 每个 skill 仅用一个场景测试（可能无法覆盖所有功能）
+- 评分基于 AI 判断，存在主观因素
+- 不可调用的 skills 需要手动执行（更慢，自动化程度低）
+- 测试质量取决于生成的 input.md 的相关性
+
+## 命令参考
+
+| 命令 | 操作 |
 |---|---|
-| `测试 [topic] 相关skill` | Discover and test skills for a topic |
-| `测试 [skill-name]` | Test a specific skill |
-| `进度` | Show testing progress |
-| `报告 [skill-name]` | View a skill's report |
-| `对比 [skill1] [skill2]` | Compare two skills |
+| `测试 [主题] 相关skill` | 发现并测试主题相关的 skills |
+| `测试 [skill名称]` | 测试特定 skill |
+| `进度` | 显示测试进度 |
+| `报告 [skill名称]` | 查看 skill 的报告 |
+| `对比 [skill1] [skill2]` | 对比两个 skills |
 
-## Technical Details
+## 技术细节
 
-- **Type**: Claude Code Agent
-- **Tools**: All tools available
-- **Trigger**: User message matching patterns
-- **Execution**: Runs as subagent via Agent tool
-- **State**: Stateless (each invocation is independent)
+- **类型**：Claude Code Agent
+- **工具**：所有工具可用
+- **触发**：匹配模式的用户消息
+- **执行**：通过 Agent 工具作为子代理运行
+- **状态**：无状态（每次调用独立）
 
-## Future Enhancements
+## 未来增强
 
-- Multi-scenario testing per skill
-- Custom test case support
-- Performance benchmarking
-- Regression testing for skill updates
-- Export reports to JSON/CSV
+- 每个 skill 的多场景测试
+- 自定义测试用例支持
+- 性能基准测试
+- skill 更新的回归测试
+- 导出报告为 JSON/CSV
 
 ---
 
-**Version**: 1.0.0
-**Last Updated**: 2026-03-10
-**Compatibility**: Claude Code CLI
+**版本**：1.0.0
+**最后更新**：2026-03-10
+**兼容性**：Claude Code CLI
