@@ -1,0 +1,23 @@
+name: "渔夫"
+industry: "独立开发者 / 技术写作"
+target_audience: "程序员、独立开发者、技术爱好者"
+
+topics:
+  - 技术实践
+  - 开发工具
+  - 个人效率
+  - AI编程
+
+tone: "务实、直接、有观点、不废话"
+voice: "第一人称，像一个懂行的老朋友在分享踩坑经验"
+word_count: "1500-2500"
+content_style: "干货"
+
+blacklist:
+  words: []
+  topics: []
+
+reference_accounts: []
+
+theme: "simple"
+theme_color: "#3498db"

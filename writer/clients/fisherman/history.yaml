@@ -1,0 +1,20 @@
+# Published articles history for 渔夫 client
+articles:
+  - date: "2026-04-17"
+    title: "Claude Design来了：设计师的饭碗，究竟还剩什么？"
+    topic_source: "AI工具"
+    keywords: ["Claude Design", "Anthropic", "AI设计", "设计工具", "具身认知"]
+    framework: "expose"
+    word_count: 2100
+    media_id: "sqyNB5DMvxvCviPRqfVd26yuC69JJFsJ16jv0YDmihYht0TQ5WDKC2M6gr8jyGeP"
+    theme: "simple"
+    stats: null
+  - date: "2026-04-17"
+    title: "MacBook M1 Pro 升级 macOS 24 后降级全记录：血泪教训与避坑指南"
+    topic_source: "个人经历"
+    keywords: ["macOS", "Time Machine", "备份", "降级", "NAS"]
+    framework: "story"
+    word_count: 1500
+    media_id: "sqyNB5DMvxvCviPRqfVd2zU-sA8we0-73DZh8JugejWdfr0-qiGOW09Q_hOHyXO7"
+    theme: "simple"
+    stats: null
