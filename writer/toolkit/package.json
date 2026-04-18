@@ -1,11 +1,11 @@
 {
-  "name": "youmind-wechat-toolkit",
+  "name": "writer-toolkit",
   "version": "1.0.0",
-  "description": "YouMind WeChat: Markdown to WeChat HTML with dynamic themes",
+  "description": "Writer: Multi-platform article formatting and WeChat publishing toolkit",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "youmind-wechat": "dist/cli.js"
+    "wechat-article": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
