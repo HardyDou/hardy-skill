@@ -132,7 +132,7 @@ After drafting, answer these. If "no" to 2+, REWRITE — don't polish:
 
 Depth comes from KNOWING MORE. Not from thinking harder in a vacuum.
 
-1. **Mine the knowledge base.** If YouMind is configured, the user's curated materials are a goldmine. Use `youmind-api.js search`. Read fully. Extract specific data points, unusual perspectives, and real experiences that no generic article would have.
+1. **Mine the knowledge base.** Search for relevant materials, articles, and references. Read fully. Extract specific data points, unusual perspectives, and real experiences that no generic article would have.
 
 2. **Find the uncomfortable intersection.** The most powerful insights come from connecting two fields that don't usually speak:
    - Writing about management? Pull from evolutionary biology — "office politics isn't dysfunction, it's primate hierarchy with email"
