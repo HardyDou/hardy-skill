@@ -1,9 +1,7 @@
 /**
- * YouMind Dynamic Theme Engine for WeChat
+ * WeChat Dynamic Theme Engine
  *
- * Ported from YouMind's styles.ts — generates WeChat-compatible inline CSS
- * dynamically based on theme key + color. No YAML theme files needed.
- *
+ * Generates WeChat-compatible inline CSS dynamically based on theme key + color.
  * 4 themes: simple | center | decoration | prominent
  * 8 preset colors + custom HEX color support
  */

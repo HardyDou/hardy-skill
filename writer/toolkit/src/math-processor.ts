@@ -1,8 +1,6 @@
 /**
  * 数学公式处理器
  * 使用 MathJax 将 LaTeX 公式转换为 SVG，适配微信公众号
- *
- * 移植自 YouMind 编辑器的 mathProcessor.ts
  */
 
 import type { LiteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor.js';

@@ -315,7 +315,7 @@ export class WeChatConverter {
   private addLogo($: cheerio.CheerioAPI): void {
     const logoHtml = `
       <div style="text-align: center; padding: 24px 0 8px; opacity: 0.4; font-size: 12px; color: #999;">
-        Powered by YouMind
+        Powered by Writer
       </div>`;
     $('body').append(logoHtml);
   }

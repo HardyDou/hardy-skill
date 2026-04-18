@@ -7,8 +7,6 @@
  * - highlight.js class 转换为内联 style（微信不支持 CSS class）
  * - 空格/Tab 保留（微信会压缩空白字符）
  * - 每行独立包裹，支持横向滚动
- *
- * 移植自 YouMind 编辑器的 renderer.ts
  */
 
 import type * as cheerio from 'cheerio';
